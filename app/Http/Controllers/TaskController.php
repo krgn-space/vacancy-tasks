@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TaskCreated;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class TaskController extends Controller
 {
@@ -58,6 +61,8 @@ class TaskController extends Controller
         }
 
         $task->save();
+
+        Mail::to(Auth::user()->email)->send(new TaskCreated($task));
 
         return response()->json([
             'message' => 'Задача создана.',
